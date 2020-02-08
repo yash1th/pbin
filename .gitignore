@@ -1,0 +1,8 @@
+# python venv binaries
+bin/
+include/
+lib/
+pyvenv.cfg
+
+# pycharm configuration
+.idea/
