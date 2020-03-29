@@ -6,3 +6,20 @@ pyvenv.cfg
 
 # pycharm configuration
 .idea/
+
+# paw requests
+paw/
+
+# file format
+*.txt
+
+# macOS files
+.DS_Store
+
+# py cache
+pbin/__pycache__
+
+# pypi temporary ignore
+setup.py
+pbin/__main__.py
+config.ini
