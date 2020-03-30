@@ -1,11 +1,10 @@
 import requests
-from pathlib import Path
-import json
+# from pbin.helpers import *
 from helpers import *
 
 
-def login():
-    config = get_config('defaults.ini')
+def new_user():
+    config = get_config(DEFAULT_CONFIG_PATH)
 
     username = input('username : ').strip()
     password = input('password : ').strip()
@@ -14,18 +13,17 @@ def login():
         'api_user_name': username,
         'api_user_password': password
     }
-    response = requests.post(url=config['URL']['login'], data=data,
-                             headers={'Content-Type': 'application/x-www-form-urlencoded'})
-
-    print(response.content.decode('utf-8'))
-
-
-
-    #config['USER'] = {f'{username}': response.content.decode('utf-8')}
-    # config.set('USER', username, response.content.decode('utf-8'))
-    # with open(config_file_path, 'w') as f:
-    #     config.write(f)
+    response = requests.post(
+        url=config['URL']['login'],
+        data=data,
+        headers={'Content-Type': 'application/x-www-form-urlencoded'}
+    )
+    content = response.content.decode('utf-8')
+    if not check_for_bad_response(response.status_code, content):
+        config.set('USER', username, content)
+        with open(DEFAULT_CONFIG_PATH, 'w') as f:
+            config.write(f)
 
 
 if __name__ == '__main__':
-    login()
+    new_user()

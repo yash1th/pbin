@@ -1,32 +1,15 @@
-"""
-Uploads file to pastebin
-"""
-# TODO: file format
-# TODO: arguments
-# TODO: deal with responses
-
-import sys
 import requests
 from helpers import *
 
 
-def get_input():
-    input_str = sys.stdin.read('enter input need to upload:\n')
-    return input_str
-
-
 def upload_file(args):
-    config = get_config('default.ini')
+    config = get_config(DEFAULT_CONFIG_PATH)
 
     if args.filepath:
         api_paste_code = get_file_content(args.filepath)
-    else:
-        input_str = get_input()
-        if not input_str:
-            api_paste_code = input_str
-        else:
-            print('error - input is empty, nothing to upload')
-            sys.exit()
+
+    if args.input:
+        api_paste_code = get_input()
 
     data = dict()
 
@@ -38,18 +21,20 @@ def upload_file(args):
     # optional parameters
     data['api_paste_private'] = config['VISIBILITY'][args.visibility]
     data['api_paste_expire_date'] = config['PASTE_EXPIRE'][args.expire]
-    if not args.name:
+    if args.name:
         data['api_paste_name'] = args.name.strip()
-    # TODO: add api user key
-    # TODO: paste format
+
+    if args.user:
+        data['api_user_key'] = get_user_key(config, args.user)
 
     response = requests.post(
         url=config['URL']['post'],
         data=data
     )
 
-    print(response.status_code)
-    print(response.content.decode('utf-8'))
+    content = response.content.decode('utf-8')
+    if not check_for_bad_response(response.status_code, content):
+        print(content)
 
 
 if __name__ == '__main__':
