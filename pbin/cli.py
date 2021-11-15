@@ -3,6 +3,10 @@ from upload import upload_file
 import sys
 
 
+def get_file(args):
+    print('get file has been called')
+
+
 def get_args():
     parser = argparse.ArgumentParser(description='pastebin cli...')
     subparsers = parser.add_subparsers(help='sub-command help')
@@ -24,11 +28,14 @@ def get_args():
 
     parser_upload.set_defaults(func=upload_file)
 
-    args = parser.parse_args()
+    # parser and arguments for reading a file
+    parser_get = subparsers.add_parser('get', help='get command')
+    parser_get.add_argument('paste_id')
+    parser_get.add_argument('--user', type=str.lower, help='user for private pastes')
+    parser_get.add_argument('-w', '--write', type=str, help='write to a file')
+    parser_get.set_defaults(func=get_file)
 
-    if args.anon and args.visibility == 'private':
-        parser.error('visibility cannot be private while uploading anonymously')
-        sys.exit()
+    args = parser.parse_args()
 
     args.func(args)
 
@@ -39,6 +46,7 @@ def get_args():
 
 def main():
     args = get_args()
+    print(args)
 
 
 if __name__ == '__main__':

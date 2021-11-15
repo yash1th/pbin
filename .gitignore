@@ -23,3 +23,6 @@ pbin/__pycache__
 setup.py
 pbin/__main__.py
 config.ini
+
+# scrap
+scrap/

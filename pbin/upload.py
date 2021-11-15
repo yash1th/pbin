@@ -1,8 +1,13 @@
 import requests
 from helpers import *
+from argparse import ArgumentParser
 
 
 def upload_file(args):
+    if args.anon and args.visibility == 'private':
+        ArgumentParser.error('visibility cannot be private while uploading anonymously')
+        sys.exit()
+
     config = get_config(DEFAULT_CONFIG_PATH)
 
     if args.filepath:
